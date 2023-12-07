@@ -1,26 +1,36 @@
 import { expect, test } from "@playwright/test";
 
 const login = async (page) => {
+  const userId = "testlow1";
+  const newLocal = "12345678";
+
   await page.goto("");
-  await page.getByTestId("login-input").fill("testlow1");
-  await page.getByTestId("password-input").fill("12345678");
+  await page.getByTestId("login-input").fill(userId);
+  await page.getByTestId("password-input").fill(newLocal);
   await page.getByTestId("login-button").click();
 };
 
 test.describe("Pulpit tests", () => {
   test("quick payment with correct data", async ({ page }) => {
-    const describe = "opłata za telefon";
-    const expectedTitle = "Przelew wykonany! Chuck Demobankowy - 150,00PLN - " + describe;
+    // Arrange
+    const transferAmount = "150";
+    const transferTitle = "opłata za telefon";
+    const expectedTransferReceiver = "Chuck Demobankowy";
+    const expectedTitle = `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`;
+    const receiverId = "2";
 
+    // Act
     await login(page);
 
-    await page.locator("#widget_1_transfer_receiver").selectOption("2");
-    await page.locator("#widget_1_transfer_amount").fill("150");
-    await page.locator("#widget_1_transfer_title").fill(describe);
+    await page.locator("#widget_1_transfer_receiver").selectOption(receiverId);
+    await page.locator("#widget_1_transfer_amount").fill(transferAmount);
+    await page.locator("#widget_1_transfer_title").fill(transferTitle);
+
     await page.locator("#execute_btn").click();
     await page.getByTestId("close-button").click();
     const observedTitle = page.getByTestId("message-text");
 
+    // Assert
     await expect(observedTitle).toHaveText(expectedTitle);
   });
 
