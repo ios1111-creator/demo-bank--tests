@@ -1,16 +1,16 @@
 import { expect, test } from "@playwright/test";
 
-const login = async (page) => {
-  const userId = "testlow1";
-  const newLocal = "12345678";
-
-  await page.goto("");
-  await page.getByTestId("login-input").fill(userId);
-  await page.getByTestId("password-input").fill(newLocal);
-  await page.getByTestId("login-button").click();
-};
-
 test.describe("Pulpit tests", () => {
+  test.beforeEach(async ({ page }) => {
+    const userId = "testlow1";
+    const userPassword = "12345678";
+
+    await page.goto("");
+    await page.getByTestId("login-input").fill(userId);
+    await page.getByTestId("password-input").fill(userPassword);
+    await page.getByTestId("login-button").click();
+  });
+
   test("quick payment with correct data", async ({ page }) => {
     // Arrange
     const transferAmount = "150";
@@ -20,7 +20,6 @@ test.describe("Pulpit tests", () => {
     const receiverId = "2";
 
     // Act
-    await login(page);
 
     await page.locator("#widget_1_transfer_receiver").selectOption(receiverId);
     await page.locator("#widget_1_transfer_amount").fill(transferAmount);
@@ -41,7 +40,6 @@ test.describe("Pulpit tests", () => {
     const expectedMessage = `Doładowanie wykonane! ${topupAmount},00PLN na numer ${topupReceiver}`;
 
     // Act
-    await login(page);
 
     await page.locator("#widget_1_topup_receiver").selectOption(topupReceiver);
     await page.locator("#widget_1_topup_amount").fill(topupAmount);
