@@ -3,7 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "format": "npx prettier --write .",
+    "test": "npx playwright test",
+    "test:headed": "npm run test -- --headed",
+    "test:ui": "npm run test -- --ui",
+    "show-report": "npx playwright show-report",
+    "test:tag": "npx playwright test --grep @tag"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

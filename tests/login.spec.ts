@@ -5,12 +5,12 @@ test.describe("User login to demobank", () => {
     // Arrange
     const url = "https://demo-bank.vercel.app/";
     const expectedUserName = "Jan Demobankowy";
-    const newLocal = "testlow1";
+    const userId = "testlow1";
     const userPassword = "12345678";
 
     // Act
     await page.goto(url);
-    await page.getByTestId("login-input").fill(newLocal);
+    await page.getByTestId("login-input").fill(userId);
     await page.getByTestId("password-input").fill(userPassword);
     await page.getByTestId("login-button").click();
     const observedTitle = page.getByTestId("user-name");
@@ -22,31 +22,34 @@ test.describe("User login to demobank", () => {
   test("Unsuccessful login with too short username", async ({ page }) => {
     // Arrange
     const url = "https://demo-bank.vercel.app/";
-    const expectedTitle = "identyfikator ma min. 8 znaków";
+    const expectedErrorMessage = "identyfikator ma min. 8 znaków";
+    const incorrectUserId = "test";
 
     // Act
     await page.goto(url);
-    await page.getByTestId("login-input").fill("test");
+    await page.getByTestId("login-input").fill(incorrectUserId);
     await page.getByTestId("password-input").click();
-    const observedTitle = page.getByTestId("error-login-id");
+    const observedErrorMessage = page.getByTestId("error-login-id");
 
     // Assert
-    await expect(observedTitle).toHaveText(expectedTitle);
+    await expect(observedErrorMessage).toHaveText(expectedErrorMessage);
   });
 
   test("Unsuccessful login with too short password", async ({ page }) => {
     // Arrange
     const url = "https://demo-bank.vercel.app/";
-    const expectedTitle = "hasło ma min. 8 znaków";
+    const expectedErrorMessage = "hasło ma min. 8 znaków";
+    const userId = "test1111";
+    const incorrectUserPassword = "12345";
 
     // Act
     await page.goto(url);
-    await page.getByTestId("login-input").fill("test1111");
-    await page.getByTestId("password-input").fill("12345");
+    await page.getByTestId("login-input").fill(userId);
+    await page.getByTestId("password-input").fill(incorrectUserPassword);
     await page.getByTestId("password-input").blur();
-    const observedTitle = page.getByTestId("error-login-password");
+    const observedErrorMessage = page.getByTestId("error-login-password");
 
     // Assert
-    await expect(observedTitle).toHaveText(expectedTitle);
+    await expect(observedErrorMessage).toHaveText(expectedErrorMessage);
   });
 });
