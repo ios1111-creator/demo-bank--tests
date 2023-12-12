@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { loginData } from "../test-data/login.data";
+import { LoginPage } from "../pages/login.pages";
 
 test.describe("User login to demobank", () => {
   test.beforeEach(async ({ page }) => {
@@ -12,9 +13,10 @@ test.describe("User login to demobank", () => {
     const userPassword = loginData.userPassword;
 
     // Act
-    await page.getByTestId("login-input").fill(userId);
-    await page.getByTestId("password-input").fill(userPassword);
-    await page.getByTestId("login-button").click();
+    const loginPage = new LoginPage(page);
+    await loginPage.loginInput.fill(userId);
+    await loginPage.passwordInput.fill(userPassword);
+    await loginPage.loginButton.click();
     const observedTitle = page.getByTestId("user-name");
 
     //Assert
@@ -27,8 +29,10 @@ test.describe("User login to demobank", () => {
     const incorrectUserId = "test";
 
     // Act
-    await page.getByTestId("login-input").fill(incorrectUserId);
-    await page.getByTestId("password-input").click();
+    const loginPage = new LoginPage(page);
+    await loginPage.loginInput.fill(incorrectUserId);
+    await loginPage.passwordInput.click();
+
     const observedErrorMessage = page.getByTestId("error-login-id");
 
     // Assert
@@ -42,8 +46,9 @@ test.describe("User login to demobank", () => {
     const incorrectUserPassword = "12345";
 
     // Act
-    await page.getByTestId("login-input").fill(userId);
-    await page.getByTestId("password-input").fill(incorrectUserPassword);
+    const loginPage = new LoginPage(page);
+    await loginPage.loginInput.fill(userId);
+    await loginPage.passwordInput.fill(incorrectUserPassword);
     await page.getByTestId("password-input").blur();
     const observedErrorMessage = page.getByTestId("error-login-password");
 
