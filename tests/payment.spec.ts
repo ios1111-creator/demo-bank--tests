@@ -11,9 +11,7 @@ test.describe("Payment tests", () => {
 
     await page.goto("/");
     const loginPage = new LoginPage(page);
-    await loginPage.loginInput.fill(userId);
-    await loginPage.passwordInput.fill(userPassword);
-    await loginPage.loginButton.click();
+    loginPage.login(userId, userPassword);
   });
 
   test("Simple payment", async ({ page }) => {
@@ -22,11 +20,11 @@ test.describe("Payment tests", () => {
     const transferAmount = "3333";
     const transferAccount = "12 3445 5667 2342 3423 4234 23423";
     const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla ${transferReceiver}`;
-    
+
     // Act
     const pulpitPage = new PulpitPage(page);
     await pulpitPage.sideMenuComponent.paymentLink.click();
-    
+
     const paymentPage = new PaymentPage(page);
     await paymentPage.transferReceiverInput.fill(transferReceiver);
     await paymentPage.transferToInput.fill(transferAccount);

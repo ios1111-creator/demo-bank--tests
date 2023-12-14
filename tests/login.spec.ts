@@ -4,8 +4,11 @@ import { LoginPage } from "../pages/login.page";
 import { PulpitPage } from "../pages/pulpit.page";
 
 test.describe("User login to demobank", () => {
+  let loginPage: LoginPage;
+
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
+    loginPage = new LoginPage(page);
   });
   test("Successful login with correct credentials", async ({ page }) => {
     // Arrange
@@ -14,10 +17,7 @@ test.describe("User login to demobank", () => {
     const userPassword = loginData.userPassword;
 
     // Act
-    const loginPage = new LoginPage(page);
-    await loginPage.loginInput.fill(userId);
-    await loginPage.passwordInput.fill(userPassword);
-    await loginPage.loginButton.click();
+    loginPage.login(userId, userPassword);
 
     //Assert
     const pulpitPage = new PulpitPage(page);
@@ -30,7 +30,6 @@ test.describe("User login to demobank", () => {
     const incorrectUserId = "test";
 
     // Act
-    const loginPage = new LoginPage(page);
     await loginPage.loginInput.fill(incorrectUserId);
     await loginPage.passwordInput.click();
 
@@ -45,7 +44,6 @@ test.describe("User login to demobank", () => {
     const incorrectUserPassword = "12345";
 
     // Act
-    const loginPage = new LoginPage(page);
     await loginPage.loginInput.fill(userId);
     await loginPage.passwordInput.fill(incorrectUserPassword);
     await loginPage.passwordInput.blur();
